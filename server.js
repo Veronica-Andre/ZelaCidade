@@ -1,11 +1,20 @@
 const express = require('express');
 
 const {criarBanco} = require('./database');
+const cors = require('cors'); //importando o pacote que gerencia as permissões de acesso
+
 
 const app = express();
 
 app.use(express.json());
 
+//Ativando o cors no nosso servidor
+//o comando app.use(cors()) avisa ao navegador
+//"Pode liberar o acesso para qualquer site queira consultar meus dados"
+app.use(cors());
+
+//Rota Raiz: A porta de entrada principal (localhost:3000)
+//Enviamos um html simples para o navegador não ficar em branco
 app.get('/', (req, res) => {
     //vai enviar uma mensagem/resposta ao cliente
     res.send(`
@@ -16,12 +25,6 @@ app.get('/', (req, res) => {
         </body>
         `)
 
-});
-
-const PORT = 3000
-
-app.listen(PORT, () =>{
-    console.log(`Servidor rodando na porta http://localhost:${PORT}`)
 });
 
 app.get('/incidentes', async (req, res) => {
@@ -82,3 +85,11 @@ app.delete('/incidentes/:id', async (req, res) => {
     
     res.send(`O incidente de id ${id} foi removido com sucesso!!`)
 })
+
+//Define a porta onde o servidor vai rodar
+const PORT = process.env.PORT || 3000
+
+
+app.listen(PORT, () =>{
+    console.log(`Servidor rodando na porta http://localhost:${PORT}`)
+});
